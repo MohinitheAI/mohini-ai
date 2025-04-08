@@ -1,19 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Mohini AI 💋</title>
+  <title>Mohini AI Chat</title>
 </head>
 <body>
-  <h1>Welcome to Mohini AI 💃</h1>
-  <form action="/ask" method="post">
-    <input type="text" name="message" placeholder="Say something to Mohini..." required>
-    <button type="submit">Send</button>
-  </form>
+  <h1>Mohini 💋</h1>
+  <div id="chatBox"></div>
+  <input type="text" id="userInput" placeholder="Type here..." />
+  <button onclick="sendMessage()">Send</button>
 
-  {% if user_input %}
-    <h3><strong>You:</strong> {{ user_input }}</h3>
-    <h3><strong>Mohini:</strong> {{ response }}</h3>
-  {% endif %}
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const chatBox = document.getElementById("chatBox");
+
+      const userText = input.value;
+      chatBox.innerHTML += `<div><b>You:</b> ${userText}</div>`;
+
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userText })
+      });
+
+      const data = await res.json();
+      chatBox.innerHTML += `<div><b>Mohini:</b> ${data.reply}</div>`;
+      input.value = "";
+    }
+  </script>
 </body>
 </html>
